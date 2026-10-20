@@ -1,4 +1,4 @@
-# Fare Grid
+# Fare Watch
 
 Find the cheapest dates to fly with the [SearchApi Google Flights APIs](https://www.searchapi.io/docs/google-flights-api). One call paints a grid of every outbound and return date pair in your window; a click opens the actual flights for that pair, with Google's price level, the typical price range and about two months of daily price history.
 
@@ -9,8 +9,8 @@ This is a local example application for developers. It is not a hosted service, 
 You need Git and **Node.js 24.13.0 or newer**. No npm packages, no database, no build step.
 
 ```sh
-git clone https://github.com/SearchApi/fare-grid.git
-cd fare-grid
+git clone https://github.com/SearchApi/fare-watch.git
+cd fare-watch
 npm start
 ```
 
@@ -59,12 +59,12 @@ Every panel has a **Raw API response** section so you can see exactly what Searc
 
 - Prices are observations at the moment of the call. They move daily; a cached grid shows when it was fetched.
 - "Lowest in this window" means lowest among the pairs the call covered, not the lowest possible fare.
-- The price level, typical range and history come from Google's price insights, as returned by the API. Fare Grid does not predict prices.
+- The price level, typical range and history come from Google's price insights, as returned by the API. Fare Watch does not predict prices.
 - Booking happens on the seller's site. The app never books anything.
 
 ## What the app adds on top of the API
 
-SearchApi returns the structured data: the calendar, the itineraries, price insights, deals and locations. Fare Grid adds the grid layout and color scale, the cheapest-pairs shortlist, the below-typical markers, the buy-or-wait rule, the multi-airport chips, the trip-length math, the history chart, the local cache, the credit counter, the library and the CSV export.
+SearchApi returns the structured data: the calendar, the itineraries, price insights, deals and locations. Fare Watch adds the grid layout and color scale, the cheapest-pairs shortlist, the below-typical markers, the buy-or-wait rule, the multi-airport chips, the trip-length math, the history chart, the local cache, the credit counter, the library and the CSV export.
 
 ## Keys and local data
 

@@ -1,5 +1,5 @@
 {
-  "name": "fare-grid",
+  "name": "fare-watch",
   "license": "MIT",
   "version": "0.1.0",
   "private": true,
@@ -16,6 +16,6 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/SearchApi/fare-grid.git"
+    "url": "https://github.com/SearchApi/fare-watch.git"
   }
 }

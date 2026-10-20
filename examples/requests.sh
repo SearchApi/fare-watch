@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# The two SearchApi requests behind Fare Grid, ready to run.
+# The two SearchApi requests behind Fare Watch, ready to run.
 # Needs: curl, jq, and SEARCHAPI_API_KEY in the environment. Each request costs one credit.
 #
 #   export SEARCHAPI_API_KEY=your_key

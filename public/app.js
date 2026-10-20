@@ -696,7 +696,7 @@ $("export-csv").addEventListener("click", () => {
   const blob = new Blob([csv], { type: "text/csv" });
   const a = document.createElement("a");
   a.href = URL.createObjectURL(blob);
-  a.download = `fare-grid-${String(p.departure_id).replaceAll(",", "+")}-${String(p.arrival_id).replaceAll(",", "+")}.csv`;
+  a.download = `fare-watch-${String(p.departure_id).replaceAll(",", "+")}-${String(p.arrival_id).replaceAll(",", "+")}.csv`;
   a.click();
   URL.revokeObjectURL(a.href);
 });

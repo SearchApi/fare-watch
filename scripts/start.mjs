@@ -65,7 +65,7 @@ const server = http.createServer(async (req, res) => {
 });
 
 server.listen(port, host, () => {
-  console.log(`Fare Grid is running at http://${host}:${port}`);
+  console.log(`Fare Watch is running at http://${host}:${port}`);
   console.log(
     process.env.SEARCHAPI_API_KEY
       ? "SearchApi key loaded from the environment."

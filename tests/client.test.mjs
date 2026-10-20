@@ -26,7 +26,7 @@ test("cache key ignores order and drops the api key", () => {
 });
 
 test("second identical search is served from disk and does not call SearchApi", async () => {
-  const dir = await mkdtemp(path.join(tmpdir(), "fare-grid-"));
+  const dir = await mkdtemp(path.join(tmpdir(), "fare-watch-"));
   try {
     const fetchImpl = fakeFetch({ calendar: [{ departure: "2026-12-01", return: "2026-12-10", price: 900 }] });
     const client = new SearchApiClient({ dataDir: dir, fetchImpl });
@@ -56,7 +56,7 @@ test("second identical search is served from disk and does not call SearchApi", 
 });
 
 test("refresh bypasses the cache", async () => {
-  const dir = await mkdtemp(path.join(tmpdir(), "fare-grid-"));
+  const dir = await mkdtemp(path.join(tmpdir(), "fare-watch-"));
   try {
     const fetchImpl = fakeFetch({ deals: [] });
     const client = new SearchApiClient({ dataDir: dir, fetchImpl });
@@ -71,7 +71,7 @@ test("refresh bypasses the cache", async () => {
 });
 
 test("errors from SearchApi are surfaced with their status", async () => {
-  const dir = await mkdtemp(path.join(tmpdir(), "fare-grid-"));
+  const dir = await mkdtemp(path.join(tmpdir(), "fare-watch-"));
   try {
     const client = new SearchApiClient({ dataDir: dir, fetchImpl: fakeFetch({ error: "Invalid API key" }, 401) });
     await client.init();
@@ -104,7 +104,7 @@ test("summaries describe each engine", () => {
 });
 
 test("cacheOnly never calls SearchApi", async () => {
-  const dir = await mkdtemp(path.join(tmpdir(), "fare-grid-"));
+  const dir = await mkdtemp(path.join(tmpdir(), "fare-watch-"));
   try {
     const fetchImpl = fakeFetch({ calendar: [] });
     const client = new SearchApiClient({ dataDir: dir, fetchImpl });
