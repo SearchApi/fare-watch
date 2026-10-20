@@ -1,0 +1,244 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Fare Grid</title>
+    <meta
+      name="description"
+      content="Find the cheapest dates to fly with the SearchApi Google Flights APIs. Local app: a price grid, flight details, price insights and deals."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/styles.css" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="brand">
+        <span class="brand-mark" aria-hidden="true"></span>
+        <div>
+          <h1>Fare Grid</h1>
+          <p><a href="https://www.searchapi.io/docs/google-flights-api" target="_blank" rel="noreferrer">SearchApi Google Flights</a></p>
+        </div>
+      </div>
+      <div class="topbar-actions">
+        <span class="usage" id="usage" title="Live SearchApi calls this session · total. Cached results are free.">—</span>
+        <button class="btn btn-ghost" id="connect-btn" type="button">
+          <span class="dot" id="key-dot"></span><span id="key-label">Connect key</span>
+        </button>
+      </div>
+    </header>
+
+    <nav class="tabs" role="tablist">
+      <button class="tab is-active" data-tab="calendar" role="tab" type="button">Calendar</button>
+      <button class="tab" data-tab="deals" role="tab" type="button">Deals</button>
+      <button class="tab" data-tab="library" role="tab" type="button">Library</button>
+    </nav>
+
+    <main>
+      <!-- Calendar -->
+      <section class="view is-active" id="view-calendar">
+        <form class="panel form" id="calendar-form" autocomplete="off">
+          <div class="row">
+            <div class="field field-grow">
+              <label for="origin-q">From</label>
+              <div class="lookup">
+                <input id="origin-q" placeholder="Airport or city" autocomplete="off" />
+              </div>
+              <input type="hidden" id="origin-id" />
+              <div class="lookup-results" id="origin-results" hidden></div>
+              <div class="chosen" id="origin-chosen"></div>
+            </div>
+            <div class="field field-grow">
+              <label for="dest-q">To</label>
+              <div class="lookup">
+                <input id="dest-q" placeholder="Airport or city" autocomplete="off" />
+              </div>
+              <input type="hidden" id="dest-id" />
+              <div class="lookup-results" id="dest-results" hidden></div>
+              <div class="chosen" id="dest-chosen"></div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="field">
+              <label for="flight-type">Trip</label>
+              <select id="flight-type">
+                <option value="round_trip">Round trip</option>
+                <option value="one_way">One way</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="out-start">Depart between</label>
+              <div class="pair"><input type="date" id="out-start" required /><input type="date" id="out-end" required /></div>
+            </div>
+            <div class="field" id="return-field">
+              <label for="ret-start">Return between</label>
+              <div class="pair"><input type="date" id="ret-start" /><input type="date" id="ret-end" /></div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="field">
+              <label for="adults">Adults</label>
+              <input type="number" id="adults" min="1" max="9" value="1" />
+            </div>
+            <div class="field">
+              <label for="travel-class">Cabin</label>
+              <select id="travel-class">
+                <option value="economy">Economy</option>
+                <option value="premium_economy">Premium economy</option>
+                <option value="business">Business</option>
+                <option value="first_class">First</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="stops">Stops</label>
+              <select id="stops">
+                <option value="any">Any</option>
+                <option value="nonstop">Nonstop</option>
+                <option value="one_stop_or_fewer">1 stop or fewer</option>
+                <option value="two_stops_or_fewer">2 stops or fewer</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="currency">Currency</label>
+              <input id="currency" value="USD" maxlength="3" />
+            </div>
+            <div class="field">
+              <label for="max-price">Max price</label>
+              <input type="number" id="max-price" min="0" placeholder="none" />
+            </div>
+          </div>
+
+          <div class="row row-actions">
+            <p class="hint" id="combo-hint"></p>
+            <div class="actions">
+              <button class="btn btn-ghost btn-small" type="button" id="refresh-grid" title="Fetch again · 1 credit" hidden>Refresh</button>
+              <button class="btn btn-primary" type="submit" id="search-grid">Search</button>
+            </div>
+          </div>
+          <p class="error" id="calendar-error" hidden></p>
+        </form>
+
+        <section class="panel" id="grid-panel" hidden>
+          <div class="panel-head">
+            <div>
+              <h2 id="grid-title">Price grid</h2>
+              <p class="meta" id="grid-meta"></p>
+            </div>
+            <div class="actions">
+              <button class="btn btn-ghost btn-small" type="button" id="export-csv">CSV</button>
+            </div>
+          </div>
+          <div class="cheapest" id="cheapest"></div>
+          <div class="grid-scroll"><div id="grid"></div></div>
+          <p class="legend" id="grid-legend"></p>
+          <div id="grid-raw"></div>
+        </section>
+
+        <section class="panel" id="flights-panel" hidden>
+          <div class="panel-head">
+            <div>
+              <h2 id="flights-title">Flights</h2>
+              <p class="meta" id="flights-meta"></p>
+            </div>
+            <div class="actions">
+              <button class="btn btn-ghost btn-small" type="button" id="refresh-flights" title="Fetch again · 1 credit">Refresh</button>
+            </div>
+          </div>
+          <div class="insights" id="insights"></div>
+          <div id="flights"></div>
+          <div id="returns"></div>
+          <div id="booking"></div>
+        </section>
+      </section>
+
+      <!-- Deals -->
+      <section class="view" id="view-deals">
+        <form class="panel form" id="deals-form" autocomplete="off">
+          <div class="row">
+            <div class="field">
+              <label for="deals-origin">From</label>
+              <input id="deals-origin" placeholder="JFK" maxlength="3" required />
+            </div>
+            <div class="field field-grow">
+              <label for="deals-q">Mood</label>
+              <input id="deals-q" placeholder="beaches, ski, food (optional)" />
+            </div>
+            <div class="field">
+              <label for="deals-stops">Stops</label>
+              <select id="deals-stops">
+                <option value="any">Any</option>
+                <option value="nonstop">Nonstop</option>
+                <option value="one_stop_or_fewer">1 stop or fewer</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="deals-currency">Currency</label>
+              <input id="deals-currency" value="USD" maxlength="3" />
+            </div>
+          </div>
+          <div class="row row-actions">
+            <p class="hint">1 credit</p>
+            <div class="actions">
+              <button class="btn btn-ghost btn-small" type="button" id="refresh-deals" title="Fetch again · 1 credit" hidden>Refresh</button>
+              <button class="btn btn-primary" type="submit">Find deals</button>
+            </div>
+          </div>
+          <p class="error" id="deals-error" hidden></p>
+        </form>
+        <section class="panel" id="deals-panel" hidden>
+          <div class="panel-head">
+            <div>
+              <h2>Deals</h2>
+              <p class="meta" id="deals-meta"></p>
+            </div>
+          </div>
+          <div class="deals" id="deals"></div>
+        </section>
+      </section>
+
+      <!-- Library -->
+      <section class="view" id="view-library">
+        <section class="panel">
+          <div class="panel-head">
+            <div>
+              <h2>Library</h2>
+              <p class="meta">Cached searches. Reopening is free.</p>
+            </div>
+          </div>
+          <div id="library"></div>
+        </section>
+      </section>
+    </main>
+
+    <footer class="foot">
+      <p>Prices are snapshots, not offers. Built with <a href="https://www.searchapi.io/" target="_blank" rel="noreferrer">SearchApi</a>.</p>
+    </footer>
+
+    <dialog id="key-dialog">
+      <form method="dialog" class="dialog-form">
+        <h2>SearchApi key</h2>
+        <p>Kept in this tab only, sent to your local server. Reconnect after a reload.</p>
+        <p class="hint" id="env-hint" hidden>Already loaded from <code>SEARCHAPI_API_KEY</code>.</p>
+        <label for="key-input">API key</label>
+        <input id="key-input" type="password" placeholder="Paste your key" />
+        <p class="hint"><a href="https://www.searchapi.io/users/sign_up" target="_blank" rel="noreferrer">Free account</a>, 100 credits.</p>
+        <div class="actions">
+          <button class="btn btn-ghost" value="cancel" type="submit">Close</button>
+          <button class="btn btn-primary" value="save" type="submit" id="key-save">Connect</button>
+        </div>
+      </form>
+    </dialog>
+
+    <div class="tooltip" id="tooltip" hidden></div>
+
+    <script type="module" src="/app.js"></script>
+  </body>
+</html>

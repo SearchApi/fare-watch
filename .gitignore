@@ -1,0 +1,10 @@
+# local state: cached SearchApi responses and usage counter
+.data/
+
+# secrets
+.env
+.env.*
+
+# system
+.DS_Store
+node_modules/

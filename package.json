@@ -1,0 +1,21 @@
+{
+  "name": "fare-grid",
+  "license": "MIT",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Find the cheapest dates to fly with the SearchApi Google Flights APIs: a local price grid, flight details, price insights and deals.",
+  "type": "module",
+  "engines": {
+    "node": ">=24.13.0"
+  },
+  "scripts": {
+    "start": "node scripts/start.mjs",
+    "test": "node --test tests/*.test.mjs",
+    "airports": "node scripts/build-airports.mjs",
+    "check": "node --check scripts/start.mjs && node --check server/searchapi.mjs && node --check server/routes.mjs && npm test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/SearchApi/fare-grid.git"
+  }
+}
